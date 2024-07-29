@@ -20,13 +20,22 @@ include 'components/wishlist_cart.php';
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>shop</title>
-   
-   <!-- font awesome cdn link  -->
+   <title>Shop</title>
+   <!-- Font Awesome CDN link -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
-   <!-- custom css file link  -->
+   <!-- Custom CSS file link -->
    <link rel="stylesheet" href="css/style.css">
+
+   <!-- Custom JavaScript for the alert dialog -->
+   <script>
+      function confirmAddToCart(event, form) {
+         event.preventDefault(); // Prevent form submission
+         if (confirm("Your product is added to the cart. Do you want to proceed?")) {
+            form.submit(); // Submit the form if "OK" is clicked
+         }
+      }
+   </script>
 
 </head>
 <body>
@@ -35,17 +44,17 @@ include 'components/wishlist_cart.php';
 
 <section class="products">
 
-   <h1 class="heading">latest products</h1>
+   <h1 class="heading">Latest Products</h1>
 
    <div class="box-container">
 
    <?php
-     $select_products = $conn->prepare("SELECT * FROM `products`"); 
+     $select_products = $conn->prepare("SELECT * FROM products"); 
      $select_products->execute();
      if($select_products->rowCount() > 0){
       while($fetch_product = $select_products->fetch(PDO::FETCH_ASSOC)){
    ?>
-   <form action="" method="post" class="box">
+   <form action="" method="post" class="box" onsubmit="confirmAddToCart(event, this)">
       <input type="hidden" name="pid" value="<?= $fetch_product['id']; ?>">
       <input type="hidden" name="name" value="<?= $fetch_product['name']; ?>">
       <input type="hidden" name="price" value="<?= $fetch_product['price']; ?>">
@@ -58,30 +67,18 @@ include 'components/wishlist_cart.php';
          <div class="price"><span>$</span><?= $fetch_product['price']; ?><span>/-</span></div>
          <input type="number" name="qty" class="qty" min="1" max="99" onkeypress="if(this.value.length == 2) return false;" value="1">
       </div>
-      <input type="submit" value="add to cart" class="btn" name="add_to_cart">
+      <input type="submit" value="Add to Cart" class="btn" name="add_to_cart">
    </form>
    <?php
       }
    }else{
-      echo '<p class="empty">no products found!</p>';
+      echo '<p class="empty">No products found!</p>';
    }
    ?>
 
    </div>
 
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <?php include 'components/footer.php'; ?>
 
